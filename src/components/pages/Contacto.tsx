@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Loader2, MapPin, Phone, Mail, CheckCircle2 } from "lucide-react";
 import { SpecTag } from "@/components/ui/SpecTag";
 import { ShimmerButton } from "@/components/ui/ShimmerButton";
+import { publicFetch } from "@/lib/api";
 
 const PROJECT_TYPES = [
   "Cancel de baño",
@@ -18,11 +19,25 @@ export function Contacto() {
   const [status, setStatus] = useState<Status>("idle");
   const [projectType, setProjectType] = useState(PROJECT_TYPES[0]);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setStatus("sending");
-    // Reemplazar por la llamada real a tu backend / servicio de email.
-    setTimeout(() => setStatus("sent"), 1200);
+    const form = new FormData(e.currentTarget);
+    try {
+      await publicFetch("/public/contact", {
+        method: "POST",
+        body: JSON.stringify({
+          name: form.get("nombre"),
+          phone: form.get("telefono"),
+          email: form.get("correo") || "sin-correo@elcercho.mx",
+          projectType,
+          message: form.get("mensaje") || "",
+        }),
+      });
+      setStatus("sent");
+    } catch {
+      setStatus("idle");
+    }
   }
 
   return (
@@ -80,6 +95,7 @@ export function Contacto() {
               <Field label="Nombre completo" htmlFor="nombre" className="sm:col-span-2">
                 <input
                   id="nombre"
+                  name="nombre"
                   required
                   placeholder="Tu nombre"
                   className="input-base"
@@ -89,6 +105,7 @@ export function Contacto() {
               <Field label="Teléfono" htmlFor="telefono">
                 <input
                   id="telefono"
+                  name="telefono"
                   required
                   type="tel"
                   placeholder="55 0000 0000"
@@ -99,6 +116,7 @@ export function Contacto() {
               <Field label="Correo" htmlFor="correo">
                 <input
                   id="correo"
+                  name="correo"
                   type="email"
                   placeholder="tucorreo@mail.com"
                   className="input-base"
@@ -123,6 +141,7 @@ export function Contacto() {
               <Field label="Mensaje" htmlFor="mensaje" className="sm:col-span-2">
                 <textarea
                   id="mensaje"
+                  name="mensaje"
                   rows={4}
                   placeholder="Medidas aproximadas, ubicación, referencias..."
                   className="input-base resize-none"

@@ -2,12 +2,14 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
 import { SpecTag } from "@/components/ui/SpecTag";
-import { CATEGORIES } from "@/data/products";
+import type { CategoryData } from "@/data/products";
+import { usePublicCategories } from "@/lib/usePublicData";
 import { useTilt3D } from "@/lib/useTilt3D";
 
 const MotionLink = motion.create(Link);
 
 export function Catalogo() {
+  const categories = usePublicCategories();
   return (
     <section id="catalogo" className="relative bg-graphite-950 py-28">
       <div className="mx-auto max-w-6xl px-6">
@@ -25,7 +27,7 @@ export function Catalogo() {
         </motion.div>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-          {CATEGORIES.map((cat, i) => (
+          {categories.map((cat, i) => (
             <CategoryCard key={cat.slug} index={i} category={cat} />
           ))}
         </div>
@@ -38,7 +40,7 @@ function CategoryCard({
   category,
   index,
 }: {
-  category: (typeof CATEGORIES)[number];
+  category: CategoryData;
   index: number;
 }) {
   const { ref, rotateX, rotateY, onPointerMove, onPointerLeave } = useTilt3D<HTMLAnchorElement>(7);

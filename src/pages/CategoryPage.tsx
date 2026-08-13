@@ -3,11 +3,12 @@ import { useParams, Navigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { CategoryHero } from "@/components/ui/CategoryHero";
 import { ProductCard } from "@/components/ui/ProductCard";
-import { CATEGORIES, getCategory } from "@/data/products";
+import { usePublicCategories, usePublicCategory } from "@/lib/usePublicData";
 
 export function CategoryPage() {
   const { slug } = useParams<{ slug: string }>();
-  const category = getCategory(slug);
+  const categories = usePublicCategories();
+  const category = usePublicCategory(slug);
 
   useEffect(() => {
     if (category) document.title = `${category.label} · Vitral Alum`;
@@ -15,7 +16,7 @@ export function CategoryPage() {
 
   if (!category) return <Navigate to="/" replace />;
 
-  const otherCategories = CATEGORIES.filter((c) => c.slug !== category.slug);
+  const otherCategories = categories.filter((c) => c.slug !== category.slug);
 
   return (
     <>

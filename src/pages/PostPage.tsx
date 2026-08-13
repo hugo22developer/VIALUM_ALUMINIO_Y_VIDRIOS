@@ -2,11 +2,12 @@ import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { Link, useParams, Navigate } from "react-router-dom";
 import { SpecTag } from "@/components/ui/SpecTag";
-import { POSTS } from "@/data/posts";
+import { usePublicPosts } from "@/lib/usePublicData";
 
 export function PostPage() {
   const { slug } = useParams<{ slug: string }>();
-  const post = POSTS.find((item) => item.slug === slug);
+  const posts = usePublicPosts();
+  const post = posts.find((item) => item.slug === slug);
 
   if (!post) return <Navigate to="/blog" replace />;
 

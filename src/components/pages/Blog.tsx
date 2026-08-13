@@ -2,9 +2,10 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SpecTag } from "@/components/ui/SpecTag";
-import { POSTS } from "@/data/posts";
+import { usePublicPosts } from "@/lib/usePublicData";
 
 export function Blog() {
+  const posts = usePublicPosts();
   return (
     <section id="blog" className="relative bg-graphite-950 py-28">
       <div className="mx-auto max-w-6xl px-6">
@@ -30,7 +31,7 @@ export function Blog() {
         </motion.div>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {POSTS.map((post, i) => (
+          {posts.map((post, i) => (
             <Link key={post.title} to={`/blog/${post.slug}`} className="contents">
               <motion.article
                 initial={{ opacity: 0, y: 30 }}
