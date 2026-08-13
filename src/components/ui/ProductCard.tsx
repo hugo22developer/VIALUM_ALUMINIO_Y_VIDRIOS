@@ -15,7 +15,7 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, index }: ProductCardProps) {
-  const [imgFailed, setImgFailed] = useState(false);
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
   const { ref, rotateX, rotateY, onPointerMove, onPointerLeave } = useTilt3D<HTMLElement>(5);
 
   const quoteHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
@@ -39,16 +39,17 @@ export function ProductCard({ product, index }: ProductCardProps) {
       >
         {/* Imagen del producto */}
         <div className="relative aspect-[4/5] overflow-hidden">
-          {!imgFailed ? (
+          {failedSrc === product.image ? (
+            <ProductImagePlaceholder title={product.title} />
+          ) : (
             <img
+              key={product.image}
               src={product.image}
               alt={product.title}
               loading="lazy"
-              onError={() => setImgFailed(true)}
+              onError={() => setFailedSrc(product.image)}
               className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
             />
-          ) : (
-            <ProductImagePlaceholder title={product.title} />
           )}
 
           {/* Barrido de luz al hover */}
