@@ -5,6 +5,7 @@ export interface Product {
   /** Ruta esperada en /public, p. ej. /products/canceles-de-bano/corredizo.jpg */
   image: string;
   specs: string[];
+  simulationPrompt?: string;
 }
 
 export interface CategoryData {

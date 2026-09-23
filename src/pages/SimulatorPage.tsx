@@ -1,12 +1,16 @@
 import { motion } from "framer-motion";
-import { ArrowLeft, ImagePlus, Sparkles } from "lucide-react";
+import { ArrowLeft, Sparkles } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
-import { CATEGORIES } from "@/data/products";
+import { usePublicCategories } from "@/lib/usePublicData";
+import { PhotoSimulator } from "@/simulation";
+
+
 
 export function SimulatorPage() {
   const { slug } = useParams<{ slug: string }>();
+  const categories = usePublicCategories();
 
-  const product = CATEGORIES.flatMap((category) => category.products).find((item) => item.slug === slug);
+  const product = categories.flatMap((category) => category.products).find((item) => item.slug === slug);
 
   return (
     <section className="relative bg-graphite-950 py-24 sm:py-28">
@@ -48,19 +52,8 @@ export function SimulatorPage() {
               <span className="font-mono text-xs uppercase tracking-[0.3em]">Tu foto</span>
             </div>
 
-            <div className="mt-6 flex min-h-[320px] flex-col items-center justify-center rounded-2xl border border-dashed border-white/15 bg-graphite-950/70 p-8 text-center">
-              <div className="rounded-full border border-white/10 bg-white/5 p-4 text-glass-300">
-                <ImagePlus size={24} />
-              </div>
-              <p className="mt-5 font-body text-sm text-steel-300">
-                Aquí podrías adjuntar una fotografía del espacio para previsualizar el producto.
-              </p>
-              <button
-                type="button"
-                className="mt-6 rounded-full border border-glass-400/30 bg-glass-400/10 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.25em] text-glass-300"
-              >
-                Subir foto
-              </button>
+            <div className="mt-6">
+              <PhotoSimulator simulationPrompt={product?.simulationPrompt} />
             </div>
           </div>
 

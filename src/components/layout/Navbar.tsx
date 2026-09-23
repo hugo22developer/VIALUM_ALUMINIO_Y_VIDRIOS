@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { ShimmerButton } from "@/components/ui/ShimmerButton";
 import { SectionLink } from "@/components/ui/SectionLink";
+import logoCercho from '../../assets/image/logo_cercho.png';
 
 const LINKS = [
   { label: "Nosotros", hash: "#nosotros" },
@@ -36,7 +37,7 @@ export function Navbar() {
         }`}
       >
         <Link to="/" className="flex items-center gap-2.5">
-          <LogoMark />
+          <LogoMark/>
           <span className="font-display text-sm font-semibold tracking-[0.14em] text-aluminum-100">
             EL&nbsp;<span className="text-glass-400">CERCHO</span>
           </span>
@@ -104,10 +105,13 @@ export function Navbar() {
 
 function LogoMark() {
   return (
-    <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
-      <rect x="1" y="1" width="24" height="24" rx="4" stroke="var(--color-glass-400)" strokeWidth="1.4" />
-      <path d="M9 1V25M17 1V25" stroke="var(--color-steel-400)" strokeWidth="1.2" />
-      <path d="M1 13H25" stroke="var(--color-steel-400)" strokeWidth="1.2" opacity="0.5" />
-    </svg>
+    <img
+      src={logoCercho}
+      alt="Logo El Cercho"
+      width={50}
+      height={50}
+      className="h-[50px] w-[50px] rounded-md object-contain"
+      aria-hidden="true"
+    />
   );
 }
