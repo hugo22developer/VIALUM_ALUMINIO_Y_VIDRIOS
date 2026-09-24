@@ -2,7 +2,7 @@ import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { simulateProduct } from "@/lib/api";
 import type { MaskData, UploadedImage } from "@/lib/types/simulation";
-import { loadImageDimensions } from "@/lib/simulationUtils";
+import { loadImageDimensions, MAX_SIMULATION_DIMENSION } from "@/lib/simulationUtils";
 import { PaintStep } from "./PaintStep";
 import { UploadStep } from "./UploadStep";
 
@@ -15,16 +15,22 @@ function imageToPngDataUrl(image: UploadedImage): Promise<string> {
   return new Promise((resolve, reject) => {
     const source = new Image();
     source.onload = () => {
+      const scale = Math.min(
+        1,
+        MAX_SIMULATION_DIMENSION / Math.max(image.width, image.height),
+      );
+      const width = Math.max(1, Math.round(image.width * scale));
+      const height = Math.max(1, Math.round(image.height * scale));
       const canvas = document.createElement("canvas");
-      canvas.width = image.width;
-      canvas.height = image.height;
+      canvas.width = width;
+      canvas.height = height;
       const context = canvas.getContext("2d");
       if (!context) {
         reject(new Error("No se pudo preparar la foto."));
         return;
       }
-      context.drawImage(source, 0, 0, image.width, image.height);
-      resolve(canvas.toDataURL("image/png"));
+      context.drawImage(source, 0, 0, width, height);
+      resolve(canvas.toDataURL("image/jpeg", 0.82));
     };
     source.onerror = () => reject(new Error("No se pudo leer la foto."));
     source.src = image.url;

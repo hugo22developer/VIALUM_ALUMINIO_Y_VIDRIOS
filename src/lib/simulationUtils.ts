@@ -1,6 +1,8 @@
 import type { Canvas as FabricCanvas } from "fabric";
 import type { FitDimensions, MaskData } from "./types/simulation";
 
+export const MAX_SIMULATION_DIMENSION = 1024;
+
 /**
  * Calcula las dimensiones a las que una imagen debe renderizarse para caber
  * por completo dentro de un contenedor de tamaño fijo, preservando su
@@ -62,7 +64,12 @@ export function generateMaskFromCanvas({
   originalHeight, 
   displayWidth 
 }: GenerateMaskParams): MaskData {
-  const multiplier = displayWidth > 0 ? originalWidth / displayWidth : 1;
+  const targetWidth = Math.min(originalWidth, MAX_SIMULATION_DIMENSION);
+  const targetHeight = Math.min(
+    originalHeight,
+    Math.round((originalHeight / originalWidth) * targetWidth),
+  );
+  const multiplier = displayWidth > 0 ? targetWidth / displayWidth : 1;
 
   const objects = fabricCanvas.getObjects();
   const previousStyles = objects.map((obj) => ({ fill: obj.fill, stroke: obj.stroke }));
@@ -78,7 +85,7 @@ export function generateMaskFromCanvas({
   objects.forEach((obj, index) => obj.set(previousStyles[index]));
   fabricCanvas.renderAll();
 
-  return { base64, width: Math.round(originalWidth), height: Math.round(originalHeight) };
+  return { base64, width: targetWidth, height: targetHeight };
 }
 
 /** 
