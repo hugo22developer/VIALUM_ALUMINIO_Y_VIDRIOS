@@ -39,7 +39,7 @@ export function ProductCard({ product, index }: ProductCardProps) {
       >
         {/* Imagen del producto */}
         <div className="relative aspect-[4/5] overflow-hidden">
-          {failedSrc === product.image ? (
+          {!product.image || failedSrc === product.image ? (
             <ProductImagePlaceholder title={product.title} />
           ) : (
             <img

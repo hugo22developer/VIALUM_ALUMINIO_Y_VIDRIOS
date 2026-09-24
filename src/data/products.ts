@@ -3,7 +3,7 @@ export interface Product {
   slug: string;
   title: string;
   description: string;
-  /** Ruta esperada en /public, p. ej. /products/canceles-de-bano/corredizo.jpg */
+  /** URL de Cloudinary recibida de API; vacio usa placeholder local. */
   image: string;
   specs: string[];
   simulationPrompt?: string;
@@ -22,6 +22,8 @@ export interface CategoryData {
   products: Product[];
 }
 
+const FALLBACK_PRODUCT_IMAGE = "";
+
 export const CATEGORIES: CategoryData[] = [
   {
     slug: "canceles-de-bano",
@@ -38,7 +40,7 @@ export const CATEGORIES: CategoryData[] = [
         title: "Cancel Corredizo Minimalista",
         description:
           "Dos hojas sobre riel superior de aluminio anodizado, sin marco inferior visible. Ideal para baños donde el espacio de apertura es limitado.",
-        image: "/products/canceles-de-bano/corredizo-minimalista.jpg",
+        image: FALLBACK_PRODUCT_IMAGE,
         specs: ["8mm Templado", "Riel superior", "Anodizado mate"],
       },
       {
@@ -46,7 +48,7 @@ export const CATEGORIES: CategoryData[] = [
         title: "Cancel Abatible Frameless",
         description:
           "Una sola hoja sin marco perimetral, sostenida por bisagras de piso a techo. La opción más limpia visualmente para baños de autor.",
-        image: "/products/canceles-de-bano/abatible-frameless.jpg",
+        image: FALLBACK_PRODUCT_IMAGE,
         specs: ["10mm Templado", "Bisagra piso-techo", "Sin perfil visible"],
       },
       {
@@ -54,7 +56,7 @@ export const CATEGORIES: CategoryData[] = [
         title: "Cancel Fijo Panorámico",
         description:
           "Panel fijo de gran formato para regaderas abiertas, con sello inferior antiderrame y esquinero de acero inoxidable.",
-        image: "/products/canceles-de-bano/fijo-panoramico.jpg",
+        image: FALLBACK_PRODUCT_IMAGE,
         specs: ["8mm Templado", "Sello antiderrame", "Esquinero inox"],
       },
       {
@@ -62,7 +64,7 @@ export const CATEGORIES: CategoryData[] = [
         title: "Cancel en Ángulo",
         description:
           "Configuración esquinera de dos hojas corredizas, pensada para regaderas en L donde se necesita aprovechar cada centímetro.",
-        image: "/products/canceles-de-bano/en-angulo.jpg",
+        image: FALLBACK_PRODUCT_IMAGE,
         specs: ["8mm Templado", "Riel doble vía", "Perfil esquinero"],
       },
     ],
@@ -82,7 +84,7 @@ export const CATEGORIES: CategoryData[] = [
         title: "Ventana Corrediza Serie 3",
         description:
           "Dos o tres hojas sobre riel de rodamiento silencioso, con cámara DVH que reduce hasta 40% la transferencia de calor.",
-        image: "/products/ventanas-puertas/ventana-corrediza.jpg",
+        image: FALLBACK_PRODUCT_IMAGE,
         specs: ["Serie 3", "DVH 24mm", "2-3 hojas"],
       },
       {
@@ -90,7 +92,7 @@ export const CATEGORIES: CategoryData[] = [
         title: "Puerta Corrediza Panorámica",
         description:
           "Vanos de gran formato para conectar interior y jardín, con riel embebido a piso y opción de mosquitero integrado.",
-        image: "/products/ventanas-puertas/puerta-corrediza.jpg",
+        image: FALLBACK_PRODUCT_IMAGE,
         specs: ["Serie 4", "Riel embebido", "Mosquitero opcional"],
       },
       {
@@ -98,7 +100,7 @@ export const CATEGORIES: CategoryData[] = [
         title: "Ventana Proyectante",
         description:
           "Apertura hacia afuera con brazo de compás, óptima para ventilación cruzada sin sacrificar hermeticidad ante lluvia.",
-        image: "/products/ventanas-puertas/ventana-proyectante.jpg",
+        image: FALLBACK_PRODUCT_IMAGE,
         specs: ["Serie 3", "Brazo compás", "Resistente a lluvia"],
       },
       {
@@ -106,7 +108,7 @@ export const CATEGORIES: CategoryData[] = [
         title: "Puerta Abatible de Aluminio",
         description:
           "Hoja abatible de una o dos piezas con cerradura multipunto, pensada para accesos principales de oficina y vivienda.",
-        image: "/products/ventanas-puertas/puerta-abatible.jpg",
+        image: FALLBACK_PRODUCT_IMAGE,
         specs: ["Serie 4", "Cerradura multipunto", "1-2 hojas"],
       },
     ],
@@ -126,7 +128,7 @@ export const CATEGORIES: CategoryData[] = [
         title: "Barandal de Vidrio Templado",
         description:
           "Paneles de vidrio templado de 10mm con fijación puntual de acero inoxidable, para escaleras y balcones sin obstruir la vista.",
-        image: "/products/barandales-portones/barandal-vidrio.jpg",
+        image: FALLBACK_PRODUCT_IMAGE,
         specs: ["10mm Templado", "Fijación puntual", "Inox 304"],
       },
       {
@@ -134,7 +136,7 @@ export const CATEGORIES: CategoryData[] = [
         title: "Portón Corredizo Automatizado",
         description:
           "Estructura de aluminio reforzado sobre riel de piso, compatible con motor y control remoto para acceso vehicular.",
-        image: "/products/barandales-portones/porton-corredizo.jpg",
+        image: FALLBACK_PRODUCT_IMAGE,
         specs: ["Aluminio reforzado", "Listo para motor", "Riel de piso"],
       },
       {
@@ -142,7 +144,7 @@ export const CATEGORIES: CategoryData[] = [
         title: "Barandal Minimalista de Aluminio",
         description:
           "Postes delgados de aluminio anodizado con pasamanos continuo, diseñado para terrazas donde la ligereza visual es prioridad.",
-        image: "/products/barandales-portones/barandal-minimalista.jpg",
+        image: FALLBACK_PRODUCT_IMAGE,
         specs: ["Anodizado", "Pasamanos continuo", "Postes 40mm"],
       },
       {
@@ -150,7 +152,7 @@ export const CATEGORIES: CategoryData[] = [
         title: "Portón Abatible Residencial",
         description:
           "Una o dos hojas abatibles con marco perimetral reforzado, tratamiento anticorrosivo y herrajes de alto tráfico.",
-        image: "/products/barandales-portones/porton-abatible.jpg",
+        image: FALLBACK_PRODUCT_IMAGE,
         specs: ["Anticorrosivo", "Herrajes alto tráfico", "1-2 hojas"],
       },
     ],
@@ -170,7 +172,7 @@ export const CATEGORIES: CategoryData[] = [
         title: "Clóset con Puertas de Cristal",
         description:
           "Sistema corredizo o abatible con puertas de cristal esmerilado o transparente sobre marco de aluminio delgado.",
-        image: "/products/muebles-a-medida/closet-cristal.jpg",
+        image: FALLBACK_PRODUCT_IMAGE,
         specs: ["Cristal esmerilado", "Marco delgado", "Corredizo o abatible"],
       },
       {
@@ -178,7 +180,7 @@ export const CATEGORIES: CategoryData[] = [
         title: "Vitrina Expositora",
         description:
           "Estructura de aluminio con repisas de cristal templado, iluminación interior opcional para exhibición comercial.",
-        image: "/products/muebles-a-medida/vitrina.jpg",
+        image: FALLBACK_PRODUCT_IMAGE,
         specs: ["Cristal templado", "Iluminación opcional", "A medida"],
       },
       {
@@ -186,7 +188,7 @@ export const CATEGORIES: CategoryData[] = [
         title: "División de Ambientes",
         description:
           "Paneles fijos o pivotantes de aluminio y vidrio para delimitar espacios de oficina u hogar sin cerrar la luz natural.",
-        image: "/products/muebles-a-medida/division-ambientes.jpg",
+        image: FALLBACK_PRODUCT_IMAGE,
         specs: ["Fijo o pivotante", "Vidrio 6mm", "Perfil slim"],
       },
       {
@@ -194,7 +196,7 @@ export const CATEGORIES: CategoryData[] = [
         title: "Mesa con Cubierta de Cristal",
         description:
           "Estructura de aluminio anodizado con cubierta de cristal templado de canto pulido, para comedor o sala de juntas.",
-        image: "/products/muebles-a-medida/cubierta-cristal.jpg",
+        image: FALLBACK_PRODUCT_IMAGE,
         specs: ["Cristal 10mm", "Canto pulido", "Base anodizada"],
       },
     ],

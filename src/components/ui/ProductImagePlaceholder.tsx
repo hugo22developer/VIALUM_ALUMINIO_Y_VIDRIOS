@@ -1,6 +1,6 @@
 import { ImageOff } from "lucide-react";
 
-/** Se muestra mientras no exista la imagen real en /public/products/... */
+/** Se muestra cuando producto aun no tiene imagen remota disponible. */
 export function ProductImagePlaceholder({ title }: { title: string }) {
   return (
     <div className="blueprint-grid absolute inset-0 flex flex-col items-center justify-center gap-2 bg-graphite-800">
