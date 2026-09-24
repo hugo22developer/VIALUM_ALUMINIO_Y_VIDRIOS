@@ -10,6 +10,7 @@ interface SimulationToolbarProps {
   onChangePhoto: () => void;
   onSimulate: () => void;
   canSimulate: boolean;
+  isSimulating?: boolean;
 }
 
 export function SimulationToolbar({
@@ -21,6 +22,7 @@ export function SimulationToolbar({
   onChangePhoto,
   onSimulate,
   canSimulate,
+  isSimulating = false,
 }: SimulationToolbarProps) {
   return (
     <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-graphite-900/60 p-4">
@@ -29,6 +31,7 @@ export function SimulationToolbar({
           <button
             type="button"
             onClick={() => onModeChange("brush")}
+            disabled={isSimulating}
             className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors ${
               mode === "brush"
                 ? "border-glass-400/50 bg-glass-400/15 text-aluminum-100"
@@ -41,6 +44,7 @@ export function SimulationToolbar({
           <button
             type="button"
             onClick={() => onModeChange("rectangle")}
+            disabled={isSimulating}
             className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors ${
               mode === "rectangle"
                 ? "border-glass-400/50 bg-glass-400/15 text-aluminum-100"
@@ -55,6 +59,7 @@ export function SimulationToolbar({
         <button
           type="button"
           onClick={onClear}
+          disabled={isSimulating}
           className="inline-flex items-center gap-1.5 rounded-full border border-white/10 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.2em] text-steel-300 transition-colors hover:border-white/20 hover:text-aluminum-100"
         >
           <Trash2 size={13} />
@@ -81,6 +86,7 @@ export function SimulationToolbar({
         <button
           type="button"
           onClick={onChangePhoto}
+          disabled={isSimulating}
           className="inline-flex items-center gap-1.5 rounded-full border border-white/10 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.2em] text-steel-300 transition-colors hover:border-white/20 hover:text-aluminum-100"
         >
           <RefreshCcw size={13} />
@@ -90,11 +96,11 @@ export function SimulationToolbar({
         <button
           type="button"
           onClick={onSimulate}
-          disabled={!canSimulate}
+          disabled={!canSimulate || isSimulating}
           className="inline-flex items-center gap-2 rounded-full bg-amber-500 px-5 py-2 font-mono text-[11px] uppercase tracking-[0.25em] text-graphite-950 transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
         >
           <Wand2 size={14} />
-          Simular en mi casa
+          {isSimulating ? "Generando..." : "Simular en mi casa"}
         </button>
       </div>
     </div>

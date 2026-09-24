@@ -9,6 +9,7 @@ interface PaintStepProps {
   image: UploadedImage;
   onChangePhoto: () => void;
   onSimulate: (mask: MaskData) => void;
+  isSimulating?: boolean;
 }
 
 const BOX_WIDTH_FALLBACK = 480;
@@ -23,7 +24,7 @@ function getClientPoint(e: MouseEvent | TouchEvent) {
   return { clientX: mouseEvent.clientX, clientY: mouseEvent.clientY };
 }
 
-export function PaintStep({ image, onChangePhoto, onSimulate }: PaintStepProps) {
+export function PaintStep({ image, onChangePhoto, onSimulate, isSimulating = false }: PaintStepProps) {
   const outerRef = useRef<HTMLDivElement>(null);
   const canvasElRef = useRef<HTMLCanvasElement>(null);
   const fabricRef = useRef<FabricCanvas | null>(null);
@@ -209,6 +210,14 @@ export function PaintStep({ image, onChangePhoto, onSimulate }: PaintStepProps) 
             <canvas ref={canvasElRef} className="absolute inset-0 rounded-xl" />
           </div>
         )}
+        {isSimulating ? (
+          <div className="absolute inset-0 flex items-center justify-center bg-graphite-950/70 backdrop-blur-sm">
+            <div className="flex flex-col items-center gap-3 text-aluminum-100">
+              <div className="h-10 w-10 animate-spin rounded-full border-2 border-glass-300/25 border-t-amber-500" />
+              <span className="font-mono text-xs uppercase tracking-[0.24em]">Generando simulacion</span>
+            </div>
+          </div>
+        ) : null}
       </div>
 
       <SimulationToolbar
@@ -220,6 +229,7 @@ export function PaintStep({ image, onChangePhoto, onSimulate }: PaintStepProps) 
         onChangePhoto={onChangePhoto}
         onSimulate={handleSimulate}
         canSimulate={hasDrawing}
+        isSimulating={isSimulating}
       />
     </motion.div>
   );

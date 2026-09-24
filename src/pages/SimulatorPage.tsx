@@ -1,14 +1,14 @@
 import { motion } from "framer-motion";
 import { ArrowLeft, Sparkles } from "lucide-react";
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { usePublicCategories } from "@/lib/usePublicData";
 import { PhotoSimulator } from "@/simulation";
 
-
-
 export function SimulatorPage() {
   const { slug } = useParams<{ slug: string }>();
   const categories = usePublicCategories();
+  const [preview, setPreview] = useState<{ originalUrl: string; simulationUrl: string } | null>(null);
 
   const product = categories.flatMap((category) => category.products).find((item) => item.slug === slug);
 
@@ -24,10 +24,10 @@ export function SimulatorPage() {
           <div>
             <p className="font-mono text-xs uppercase tracking-[0.3em] text-glass-300">Simulador visual</p>
             <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-aluminum-100 sm:text-4xl">
-              {product?.title ?? "Simulación de producto"}
+              {product?.title ?? "Simulacion de producto"}
             </h1>
             <p className="mt-3 max-w-2xl font-body text-sm leading-relaxed text-steel-300 sm:text-base">
-              Sube una foto de tu espacio y visualiza cómo se vería este sistema en tu hogar o proyecto.
+              Sube una foto de tu espacio y visualiza como se veria este sistema en tu hogar o proyecto.
             </p>
           </div>
 
@@ -53,7 +53,10 @@ export function SimulatorPage() {
             </div>
 
             <div className="mt-6">
-              <PhotoSimulator simulationPrompt={product?.simulationPrompt} />
+              <PhotoSimulator
+                productId={product?.id}
+                onSimulationComplete={(simulationUrl, originalUrl) => setPreview({ simulationUrl, originalUrl })}
+              />
             </div>
           </div>
 
@@ -64,16 +67,33 @@ export function SimulatorPage() {
             </div>
 
             <div className="mt-6 overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-graphite-800 via-graphite-900 to-graphite-950 p-4">
-              <div className="flex h-[360px] items-center justify-center rounded-[1.25rem] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.16),transparent_38%),linear-gradient(125deg,rgba(255,255,255,0.05),rgba(255,255,255,0.01))]">
-                <div className="w-[85%] rounded-[1.5rem] border border-white/10 bg-graphite-950/60 p-4 backdrop-blur-sm">
-                  <div className="h-full min-h-[280px] rounded-[1.1rem] border border-dashed border-white/10 bg-[linear-gradient(110deg,rgba(255,255,255,0.06),transparent_40%,rgba(255,255,255,0.03))] p-4">
-                    <div className="flex h-full items-end justify-center rounded-[0.95rem] border border-white/10 bg-graphite-900/70 p-6">
-                      <div className="w-full max-w-[220px] rounded-2xl border border-glass-400/20 bg-glass-400/10 px-4 py-5 text-center text-sm leading-relaxed text-steel-300">
-                        Aquí se mostrará el resultado de la simulación del producto en tu espacio.
+              <div className="flex min-h-[360px] items-center justify-center rounded-[1.25rem] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.16),transparent_38%),linear-gradient(125deg,rgba(255,255,255,0.05),rgba(255,255,255,0.01))]">
+                {preview ? (
+                  <div className="grid w-full gap-3 p-3 sm:grid-cols-2">
+                    <figure className="overflow-hidden rounded-2xl border border-white/10 bg-graphite-950/60">
+                      <img src={preview.originalUrl} alt="Foto original" className="h-72 w-full object-cover" />
+                      <figcaption className="border-t border-white/10 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.24em] text-steel-300">
+                        Antes
+                      </figcaption>
+                    </figure>
+                    <figure className="overflow-hidden rounded-2xl border border-glass-400/30 bg-graphite-950/60">
+                      <img src={preview.simulationUrl} alt="Simulacion generada" className="h-72 w-full object-cover" />
+                      <figcaption className="border-t border-glass-400/20 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.24em] text-glass-300">
+                        Despues
+                      </figcaption>
+                    </figure>
+                  </div>
+                ) : (
+                  <div className="w-[85%] rounded-[1.5rem] border border-white/10 bg-graphite-950/60 p-4 backdrop-blur-sm">
+                    <div className="h-full min-h-[280px] rounded-[1.1rem] border border-dashed border-white/10 bg-[linear-gradient(110deg,rgba(255,255,255,0.06),transparent_40%,rgba(255,255,255,0.03))] p-4">
+                      <div className="flex h-full items-end justify-center rounded-[0.95rem] border border-white/10 bg-graphite-900/70 p-6">
+                        <div className="w-full max-w-[220px] rounded-2xl border border-glass-400/20 bg-glass-400/10 px-4 py-5 text-center text-sm leading-relaxed text-steel-300">
+                          Aqui se mostrara el resultado de la simulacion del producto en tu espacio.
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>

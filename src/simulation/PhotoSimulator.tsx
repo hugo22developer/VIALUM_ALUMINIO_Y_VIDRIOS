@@ -1,45 +1,103 @@
 import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { simulateProduct } from "@/lib/api";
 import type { MaskData, UploadedImage } from "@/lib/types/simulation";
-import { UploadStep } from "./UploadStep";
 import { loadImageDimensions } from "@/lib/simulationUtils";
 import { PaintStep } from "./PaintStep";
+import { UploadStep } from "./UploadStep";
 
 interface PhotoSimulatorProps {
-  simulationPrompt?: string;
+  productId?: string;
+  onSimulationComplete?: (simulationUrl: string, originalUrl: string) => void;
 }
 
-export function PhotoSimulator({ simulationPrompt }: PhotoSimulatorProps) {
+function imageToPngDataUrl(image: UploadedImage): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const source = new Image();
+    source.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = image.width;
+      canvas.height = image.height;
+      const context = canvas.getContext("2d");
+      if (!context) {
+        reject(new Error("No se pudo preparar la foto."));
+        return;
+      }
+      context.drawImage(source, 0, 0, image.width, image.height);
+      resolve(canvas.toDataURL("image/png"));
+    };
+    source.onerror = () => reject(new Error("No se pudo leer la foto."));
+    source.src = image.url;
+  });
+}
+
+export function PhotoSimulator({ productId, onSimulationComplete }: PhotoSimulatorProps) {
   const [image, setImage] = useState<UploadedImage | null>(null);
+  const [isSimulating, setIsSimulating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function handleImageSelected(file: File) {
     const url = URL.createObjectURL(file);
     try {
       const { width, height } = await loadImageDimensions(url);
       setImage({ file, url, width, height });
+      setError(null);
     } catch {
       URL.revokeObjectURL(url);
+      setError("No se pudo leer la foto. Intenta con otra imagen.");
     }
   }
 
   function handleChangePhoto() {
     if (image) URL.revokeObjectURL(image.url);
     setImage(null);
+    setError(null);
   }
 
-  function handleSimulate(mask: MaskData) {
-    // Todavía no hay backend / servicio de generación de imagen conectado.
-    // Este log confirma que la máscara (a resolución original) se generó bien.
-    console.log("Máscara generada:", { width: mask.width, height: mask.height, simulationPrompt });
+  async function handleSimulate(mask: MaskData) {
+    if (!image || !productId) {
+      setError("Selecciona un producto valido para generar la simulacion.");
+      return;
+    }
+
+    setIsSimulating(true);
+    setError(null);
+    try {
+      const clientImageBase64 = await imageToPngDataUrl(image);
+      const result = await simulateProduct({
+        productId,
+        clientImageBase64,
+        maskBase64: mask.base64,
+      });
+      onSimulationComplete?.(result.simulationUrl, image.url);
+    } catch {
+      setError("No se pudo generar la simulacion. Intentalo de nuevo.");
+    } finally {
+      setIsSimulating(false);
+    }
   }
 
   return (
-    <AnimatePresence mode="wait">
-      {image ? (
-        <PaintStep key="paint" image={image} onChangePhoto={handleChangePhoto} onSimulate={handleSimulate} />
-      ) : (
-        <UploadStep key="upload" onImageSelected={handleImageSelected} />
-      )}
-    </AnimatePresence>
+    <div className="flex flex-col gap-3">
+      <AnimatePresence mode="wait">
+        {image ? (
+          <PaintStep
+            key="paint"
+            image={image}
+            onChangePhoto={handleChangePhoto}
+            onSimulate={handleSimulate}
+            isSimulating={isSimulating}
+          />
+        ) : (
+          <UploadStep key="upload" onImageSelected={handleImageSelected} />
+        )}
+      </AnimatePresence>
+
+      {error ? (
+        <div className="rounded-xl border border-red-400/20 bg-red-500/10 px-4 py-3 font-body text-sm text-red-100">
+          {error}
+        </div>
+      ) : null}
+    </div>
   );
 }

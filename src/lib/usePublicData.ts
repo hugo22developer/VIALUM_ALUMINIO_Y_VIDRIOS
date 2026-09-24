@@ -39,7 +39,7 @@ export function usePublicCategories() {
             accent: CATEGORY_ACCENT_MAP[category.slug] ?? category.accent,
             products: apiProducts
               .filter((product) => product.categorySlug === category.slug)
-              .map(({ slug, title, description, image, specs, simulationPrompt }) => ({ slug, title, description, image, specs, simulationPrompt })),
+              .map(({ id, slug, title, description, image, specs, simulationPrompt }) => ({ id, slug, title, description, image, specs, simulationPrompt })),
           }))
         );
       })
@@ -65,4 +65,3 @@ export function usePublicPosts() {
 
   return posts;
 }
-
