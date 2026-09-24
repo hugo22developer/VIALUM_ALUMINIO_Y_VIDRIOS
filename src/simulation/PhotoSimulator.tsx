@@ -11,7 +11,7 @@ interface PhotoSimulatorProps {
   onSimulationComplete?: (simulationUrl: string, originalUrl: string) => void;
 }
 
-function imageToPngDataUrl(image: UploadedImage): Promise<string> {
+function imageToJpegDataUrl(image: UploadedImage): Promise<string> {
   return new Promise((resolve, reject) => {
     const source = new Image();
     source.onload = () => {
@@ -30,7 +30,7 @@ function imageToPngDataUrl(image: UploadedImage): Promise<string> {
         return;
       }
       context.drawImage(source, 0, 0, width, height);
-      resolve(canvas.toDataURL("image/jpeg", 0.82));
+      resolve(canvas.toDataURL("image/jpeg", 0.75));
     };
     source.onerror = () => reject(new Error("No se pudo leer la foto."));
     source.src = image.url;
@@ -69,7 +69,7 @@ export function PhotoSimulator({ productId, onSimulationComplete }: PhotoSimulat
     setIsSimulating(true);
     setError(null);
     try {
-      const clientImageBase64 = await imageToPngDataUrl(image);
+      const clientImageBase64 = await imageToJpegDataUrl(image);
       const result = await simulateProduct({
         productId,
         clientImageBase64,

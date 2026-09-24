@@ -49,7 +49,7 @@ interface GenerateMaskParams {
 
 /**
  * Genera la máscara final a partir de lo dibujado en el canvas: una imagen
- * PNG en Base64, a la resolución original de la foto (no la del canvas en
+ * JPEG en Base64, a la resolución original de la foto (no la del canvas en
  * pantalla), con las zonas marcadas por el usuario en blanco sobre fondo
  * negro.
  *
@@ -79,7 +79,7 @@ export function generateMaskFromCanvas({
   objects.forEach((obj) => obj.set({ fill: "#ffffff", stroke: "#ffffff" }));
   fabricCanvas.renderAll();
 
-  const base64 = fabricCanvas.toDataURL({ format: "png", multiplier });
+  const base64 = fabricCanvas.toDataURL({ format: "jpeg", quality: 0.75, multiplier });
 
   fabricCanvas.backgroundColor = previousBackgroundColor;
   objects.forEach((obj, index) => obj.set(previousStyles[index]));
